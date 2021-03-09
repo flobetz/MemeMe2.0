@@ -13,6 +13,7 @@
 		FC77151225F618C7007D7138 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC77151025F618C7007D7138 /* Main.storyboard */; };
 		FC77151425F618C8007D7138 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC77151325F618C8007D7138 /* Assets.xcassets */; };
 		FC77151725F618C8007D7138 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC77151525F618C8007D7138 /* LaunchScreen.storyboard */; };
+		FC77152025F770C5007D7138 /* MemeStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC77151F25F770C5007D7138 /* MemeStruct.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		FC77151325F618C8007D7138 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FC77151625F618C8007D7138 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FC77151825F618C8007D7138 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FC77151F25F770C5007D7138 /* MemeStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeStruct.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				FC77151325F618C8007D7138 /* Assets.xcassets */,
 				FC77151525F618C8007D7138 /* LaunchScreen.storyboard */,
 				FC77151825F618C8007D7138 /* Info.plist */,
+				FC77151F25F770C5007D7138 /* MemeStruct.swift */,
 			);
 			path = "Meme Me 1.0";
 			sourceTree = "<group>";
@@ -137,6 +140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC77152025F770C5007D7138 /* MemeStruct.swift in Sources */,
 				FC77150F25F618C7007D7138 /* ViewController.swift in Sources */,
 				FC77150B25F618C7007D7138 /* AppDelegate.swift in Sources */,
 				FC77150D25F618C7007D7138 /* SceneDelegate.swift in Sources */,

@@ -39,22 +39,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super .viewWillAppear(animated)
         
         // set default values for text labels
-        topTextField.defaultTextAttributes = memeTextAttributes
-        topTextField.textAlignment = .center
-        topTextField.text = "TOP"
-        
-        bottomTextField.defaultTextAttributes = memeTextAttributes
-        bottomTextField.textAlignment = .center
-        bottomTextField.text = "BOTTOM"
+        setMemeTextFieldAttributes(topTextField)
+        setMemeTextFieldAttributes(bottomTextField)
         
         // check if camera is available on the device
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
         
-        // disable cancel button at the beginning
-        cancelButton.isEnabled = false
-        
-        // disable share button at the beginning
-        shareButton.isEnabled = false
+        // disable navigation bar buttons at the beginning
+        enableNavigationBarButtons(false)
         
         // subscribe to keyboard notifications
         subscribeToKeyboardNotifications()
@@ -73,12 +65,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBAction func photoButtonPressed(_ sender: UIBarButtonItem) {
         albumController.sourceType = .camera
+        present(albumController, animated: true, completion: nil)
     }
     
     @IBAction func shareButtonPressed(_ sender: UIBarButtonItem) {
         let myMeme = save()
         let shareController = UIActivityViewController(activityItems: [myMeme.memedImage], applicationActivities: nil)
-        shareController.completionWithItemsHandler = { (activity: UIActivity.ActivityType?, completed: Bool, arrayReturnedItems: [Any]?, error: Error?) in
+        shareController.completionWithItemsHandler = { (_, completed: Bool, _, _) in
             if completed {
                 self.saveMemeToDocumentsDirectory(meme: myMeme)
             }
@@ -90,8 +83,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imageView.image = nil
         topTextField.text = "TOP"
         bottomTextField.text = "BOTTOM"
-        shareButton.isEnabled = false
-        cancelButton.isEnabled = false
+        enableNavigationBarButtons(false)
     }
     
     // MARK: Delegate methods
@@ -104,8 +96,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             imageView.image = image
-            cancelButton.isEnabled = true
-            shareButton.isEnabled = true
+            enableNavigationBarButtons(true)
             dismiss(animated: true, completion: nil)
         }
     }
@@ -127,16 +118,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if textField.text == "" {
             if textField == topTextField {
                 textField.text = "TOP"
-                cancelButton.isEnabled = false
-                shareButton.isEnabled = false
+                enableNavigationBarButtons(false)
             } else {
                 textField.text = "BOTTOM"
-                cancelButton.isEnabled = false
-                shareButton.isEnabled = false
+                enableNavigationBarButtons(false)
             }
         } else {
-            cancelButton.isEnabled = true
-            shareButton.isEnabled = true
+            enableNavigationBarButtons(true)
         }
         
         textField.resignFirstResponder()
@@ -171,26 +159,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    // MARK: meme object
-    struct meme {
-        let topText: String?
-        let bottomText: String?
-        let originalImage: UIImage?
-        let memedImage: UIImage
-    }
-    
+    // MARK: meme object methods
     func save() -> meme {
         let myMeme = meme(topText: topTextField.text, bottomText: bottomTextField.text, originalImage: imageView.image, memedImage: generateMemedImage())
         return myMeme
     }
-    
+
     func generateMemedImage() -> UIImage {
         // hide tool and navbar
         toolBar.isHidden = true
         navigationController?.setNavigationBarHidden(true, animated: false)
         
-        UIGraphicsBeginImageContext(self.view.frame.size)
-        view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
+        UIGraphicsBeginImageContext(view.frame.size)
+        view.drawHierarchy(in: view.frame, afterScreenUpdates: true)
         let memedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         
@@ -200,7 +181,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         return memedImage
     }
-    
+
     func saveMemeToDocumentsDirectory(meme: meme) {
         // get documents directory url
         let documentDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
@@ -220,6 +201,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 print("failed to save the meme!", error)
             }
         }
+    }
+    
+    // MARK: additional methods for reducing code duplication
+    func setMemeTextFieldAttributes(_ textField: UITextField) {
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.textAlignment = .center
+        textField.text = textField == topTextField ? "TOP" : "BOTTOM"
+    }
+    
+    func enableNavigationBarButtons(_ enable: Bool) {
+        shareButton.isEnabled = enable
+        cancelButton.isEnabled = enable
     }
 }
 
