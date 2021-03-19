@@ -39,6 +39,11 @@ class SentMemesTableViewController: UITableViewController {
         }
     }
     
+    // define height of the rows
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 150.0
+    }
+    
     // fill rows with content
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SentMemeTableViewCell")! as UITableViewCell
