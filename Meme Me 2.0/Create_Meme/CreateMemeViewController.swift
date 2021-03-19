@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class CreateMemeViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var topTextField: UITextField!
     @IBOutlet weak var bottomTextField: UITextField!
@@ -50,6 +50,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         // subscribe to keyboard notifications
         subscribeToKeyboardNotifications()
+        
+        // disable tab bar
+        self.tabBarController!.tabBar.isHidden = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -83,6 +86,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imageView.image = nil
         topTextField.text = "TOP"
         bottomTextField.text = "BOTTOM"
+        self.navigationController!.popViewController(animated: true)
         enableNavigationBarButtons(false)
     }
     
@@ -160,8 +164,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     // MARK: meme object methods
-    func save() -> meme {
-        let myMeme = meme(topText: topTextField.text, bottomText: bottomTextField.text, originalImage: imageView.image, memedImage: generateMemedImage())
+    func save() -> Meme {
+        let myMeme = Meme(topText: topTextField.text, bottomText: bottomTextField.text, originalImage: imageView.image, memedImage: generateMemedImage())
+        
+        // add new meme to the Meme Array
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.memes.append(myMeme)
+        
         return myMeme
     }
 
@@ -182,7 +191,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return memedImage
     }
 
-    func saveMemeToDocumentsDirectory(meme: meme) {
+    func saveMemeToDocumentsDirectory(meme: Meme) {
         // get documents directory url
         let documentDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         // define image name
